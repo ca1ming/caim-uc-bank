@@ -51,11 +51,11 @@ void createUser(void)
 		printf("open error\n");
 	}
 }
-Account login_acc(Account acc){
+Account login_acc(Account *acc){
 	printf("printf input id:(1*****)\n");
-	scanf("%d",&acc.id);
+	scanf("%d",acc->id);
 	printf("printf input password\n");
-	scanf("%s",acc.passwd);	
+	scanf("%s",acc->passwd);	
 	return acc;	
 }
 void deleteUser(void){
