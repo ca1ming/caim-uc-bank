@@ -4,8 +4,9 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<stdlib.h>
-#include "dao.h"
 #include<string.h>
+#include "dao.h"
+
 const char* ID_FILE ="id.dat";
 
 int generator_id(void)
@@ -58,14 +59,15 @@ int createUser(Account acc)
 	close(fd);
 	return 0;
 }
+
 int deleteUser(Account acc)
 {
 	char filename[20]={0};
-	char c;
-	sprintf(filename[20],"%d.dat",acc.id);
+	char a;
+	sprintf(filename,"%d.dat",acc.id);
 	int fd = open(filename,O_RDONLY);
 	if(-1==fd){
-		printf("dose not exit the file\n"):
+		printf("dose not exit the file\n");
 		return -1;
 	}
 	Account acc1={0};
@@ -74,31 +76,13 @@ int deleteUser(Account acc)
 		return -1;		
 	}
 	close(fd);
+
 	if(0==strcmp(acc1.passwd,acc.passwd)){
-		while(1){
-			printf("remove your account?(Y/N or y/n)");
-			scanf("%c",&c);
-			if(c=='Y'||c=='y'){
-				printf("welcome to usercount\n");
-				remove(filename);
-				break;
-			}
-			else if(c=='n' || c=='N'){
-				printf("delete error,you can't delete account\n");
-				return -2; 	
-			}
-			else {
-				printf("input data error\n");
-				continue ;
-			}
-		}
-		
+		printf("welcome to your account\n");
+		return 0;
 	}
 	else{
 		printf("sorry  passwd doesn't right!");
 		return -1;			
 	}
-	return 0;
-	
-	
 }
