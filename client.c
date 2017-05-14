@@ -1,4 +1,4 @@
-#include<stdio.h>
+##include<stdio.h>
 #include<sys/types.h>
 #include<sys/ipc.h>
 #include<sys/msg.h>
@@ -36,10 +36,10 @@ void createUser(void)
 	scanf("%lf",&acc.balance);
 	Msg msg = {M_OPEN,acc};
 	getId();
-	if(-1==msgsnd(msgid1,&msg,sizeof(msg),0))
+	if(-1==msgsnd(msgid1,&msg,sizeof(msg.acc),0))
 	{
 		printf("send first msg error\n");
-		break;
+		exit(-1);
 	}
 	printf("send first msg success\n");
 
@@ -51,40 +51,42 @@ void createUser(void)
 		printf("open error\n");
 	}
 }
-Account login_acc(Account *acc){
-	printf("printf input id:(1*****)\n");
-	scanf("%d",acc->id);
-	printf("printf input password\n");
-	scanf("%s",acc->passwd);	
-	return acc;	
+
+void login_acc(Account *acc){
+		 printf("printf input id:(1*****)\n");
+		 scanf("%d",&acc->id);
+		 printf("printf input password\n");
+		 scanf("%s",acc->passwd);
 }
 void deleteUser(void){
-	
 	Account acc;
+	char a;
+	char filename[20]={0};
 	/*
 	printf("printf input id:(1*****)\n");
 	scanf("%d",&acc.id);
 	printf("printf input password\n");
 	scanf("%s",acc.passwd);
 	*/
-	login_acc(acc);
+	login_acc(&acc);
 	Msg msg = {M_DESTROY,acc};
 	getId();
-	if(-1==msgsnd(msgid1,&msg,sizeof(msg),0))
+	if(-1==msgsnd(msgid1,&msg,sizeof(msg.acc),0))
 	{
 		printf("send first msg error\n");
-		break;
+		exit(-1);
 	}
 	printf("send first msg success\n");
 	
 	msgrcv(msgid2,&msg,sizeof(msg),0,0);
+	sprintf(filename,"%d.dat",msg.acc.id);
 	if(msg.mtype == M_SUCCESS){
-		printf("congrulations ,delete  success\n");
+		remove(filename);
+		printf("delete account success\n");
 	}
-	else{
-		printf("delete error\n");
+	if(msg.mtype == M_FAILED) {
+		printf("delete error,passwd or id wrong\n");
 	}
-
 }
 void mainPage(void)
 {
